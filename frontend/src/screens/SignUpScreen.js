@@ -15,10 +15,12 @@ import {
 
 const { width } = Dimensions.get('window');
 
-// Import your illustration image from the assets folder.
-const loadingPic = require('../../assets/loading_pic.png');
+const loadingPic = require('../../assets/loading.png');
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, route }) => {
+  const { theme = 'light' } = route.params || {};
+  const isDarkMode = theme === 'dark';
+  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -50,66 +52,129 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
     
-    // For demonstration purposes, navigate to HomeScreen
     if (navigation) {
-      navigation.replace('HomeScreen');
+      navigation.replace('HomePage', { theme }); // Pass the theme to the next screen
     }
   };
 
   const handleLogIn = () => {
-    // Navigate to the Sign In screen
     if (navigation) {
-      navigation.navigate('SignInScreen');
+      navigation.navigate('SignInScreen', { theme }); // Pass the theme to the next screen
     }
   };
 
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDarkMode ? '#1A202C' : '#FFFFFF',
+    },
+    appTitle: {
+      fontSize: 36,
+      fontWeight: 'bold',
+      color: isDarkMode ? '#FFFFFF' : '#1A202C',
+      letterSpacing: -0.5,
+    },
+    inputLabel: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: isDarkMode ? '#E2E8F0' : '#2D3748',
+      marginBottom: 8,
+    },
+    textInput: {
+      height: 52,
+      backgroundColor: isDarkMode ? '#2D3748' : '#FFFFFF',
+      borderWidth: 1,
+      borderColor: isDarkMode ? '#4A5568' : '#E2E8F0',
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      fontSize: 16,
+      color: isDarkMode ? '#FFFFFF' : '#2D3748',
+      shadowColor: isDarkMode ? '#000000' : '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: isDarkMode ? 0.3 : 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    signUpButton: {
+      backgroundColor: '#8B5CF6',
+      height: 56,
+      borderRadius: 28,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 12,
+      marginBottom: 24,
+      shadowColor: '#8B5CF6',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    signUpButtonText: {
+      color: '#FFFFFF',
+      fontSize: 18,
+      fontWeight: '600',
+      letterSpacing: 0.5,
+    },
+    logInText: {
+      fontSize: 16,
+      color: isDarkMode ? '#A0AEC0' : '#4A5568',
+    },
+    logInLink: {
+      fontSize: 16,
+      color: '#8B5CF6',
+      fontWeight: '600',
+    },
+  });
+
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      style={dynamicStyles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? '#1A202C' : '#FFFFFF'} />
       <ScrollView 
-        contentContainerStyle={styles.scrollContainer}
+        contentContainerStyle={staticStyles.scrollContainer}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Top Illustration */}
-        <View style={styles.illustrationContainer}>
+        <View style={staticStyles.illustrationContainer}>
           <Image
             source={loadingPic}
-            style={styles.illustrationImage}
+            style={staticStyles.illustrationImage}
             resizeMode="contain"
           />
         </View>
 
-        {/* App Title */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.appTitle}>Sahasi</Text>
+        <View style={staticStyles.titleContainer}>
+          <Text style={dynamicStyles.appTitle}>Sahasi</Text>
         </View>
 
-        {/* Form Container */}
-        <View style={styles.formContainer}>
-          {/* Name Fields Row */}
-          <View style={styles.nameRowContainer}>
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.inputLabel}>First Name</Text>
+        <View style={staticStyles.formContainer}>
+          <View style={staticStyles.nameRowContainer}>
+            <View style={staticStyles.nameInputContainer}>
+              <Text style={dynamicStyles.inputLabel}>First Name</Text>
               <TextInput
-                style={styles.textInput}
+                style={dynamicStyles.textInput}
                 placeholder="Enter your first name"
-                placeholderTextColor="#A0AEC0"
+                placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
                 value={firstName}
                 onChangeText={setFirstName}
                 autoCapitalize="words"
                 autoCorrect={false}
               />
             </View>
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.inputLabel}>Last Name</Text>
+            <View style={staticStyles.nameInputContainer}>
+              <Text style={dynamicStyles.inputLabel}>Last Name</Text>
               <TextInput
-                style={styles.textInput}
+                style={dynamicStyles.textInput}
                 placeholder="Enter your last name"
-                placeholderTextColor="#A0AEC0"
+                placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
                 value={lastName}
                 onChangeText={setLastName}
                 autoCapitalize="words"
@@ -118,13 +183,12 @@ const SignUpScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Phone Number Field */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Phone Number</Text>
+          <View style={staticStyles.inputGroup}>
+            <Text style={dynamicStyles.inputLabel}>Phone Number</Text>
             <TextInput
-              style={styles.textInput}
+              style={dynamicStyles.textInput}
               placeholder="Enter your phone number"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               keyboardType="phone-pad"
@@ -132,13 +196,12 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
 
-          {/* Email Field */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Email</Text>
+          <View style={staticStyles.inputGroup}>
+            <Text style={dynamicStyles.inputLabel}>Email</Text>
             <TextInput
-              style={styles.textInput}
+              style={dynamicStyles.textInput}
               placeholder="Enter your email"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -147,13 +210,12 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
 
-          {/* Username Field */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Username</Text>
+          <View style={staticStyles.inputGroup}>
+            <Text style={dynamicStyles.inputLabel}>Username</Text>
             <TextInput
-              style={styles.textInput}
+              style={dynamicStyles.textInput}
               placeholder="Create a username"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
               value={username}
               onChangeText={setUsername}
               autoCapitalize="none"
@@ -161,13 +223,12 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
 
-          {/* Password Field */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Password</Text>
+          <View style={staticStyles.inputGroup}>
+            <Text style={dynamicStyles.inputLabel}>Password</Text>
             <TextInput
-              style={styles.textInput}
+              style={dynamicStyles.textInput}
               placeholder="Create a password"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={true}
@@ -176,13 +237,12 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
 
-          {/* Confirm Password Field */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Confirm Password</Text>
+          <View style={staticStyles.inputGroup}>
+            <Text style={dynamicStyles.inputLabel}>Confirm Password</Text>
             <TextInput
-              style={styles.textInput}
+              style={dynamicStyles.textInput}
               placeholder="Confirm password"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={isDarkMode ? '#A0AEC0' : '#A0AEC0'}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={true}
@@ -191,20 +251,18 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
 
-          {/* Sign Up Button */}
           <TouchableOpacity 
-            style={styles.signUpButton} 
+            style={dynamicStyles.signUpButton} 
             onPress={handleSignUp}
             activeOpacity={0.8}
           >
-            <Text style={styles.signUpButtonText}>Sign Up</Text>
+            <Text style={dynamicStyles.signUpButtonText}>Sign Up</Text>
           </TouchableOpacity>
 
-          {/* Log In Link */}
-          <View style={styles.logInContainer}>
-            <Text style={styles.logInText}>Already have an account? </Text>
+          <View style={staticStyles.logInContainer}>
+            <Text style={dynamicStyles.logInText}>Already have an account? </Text>
             <TouchableOpacity onPress={handleLogIn}>
-              <Text style={styles.logInLink}>Log In</Text>
+              <Text style={dynamicStyles.logInLink}>Log In</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -213,11 +271,7 @@ const SignUpScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
+const staticStyles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 24,
@@ -229,19 +283,13 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   illustrationImage: {
-    width: width * 0.6,
+    width: width * 0.5,
     height: undefined,
     aspectRatio: 1.15,
   },
   titleContainer: {
     alignItems: 'center',
     marginBottom: 40,
-  },
-  appTitle: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#1A202C',
-    letterSpacing: -0.5,
   },
   formContainer: {
     flex: 1,
@@ -257,30 +305,6 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#2D3748',
-    marginBottom: 8,
-  },
-  textInput: {
-    height: 52,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: '#2D3748',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
   },
   signUpButton: {
     backgroundColor: '#8B5CF6',
@@ -310,15 +334,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-  },
-  logInText: {
-    fontSize: 16,
-    color: '#4A5568',
-  },
-  logInLink: {
-    fontSize: 16,
-    color: '#8B5CF6',
-    fontWeight: '600',
   },
 });
 

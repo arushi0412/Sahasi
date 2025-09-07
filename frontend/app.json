@@ -12,8 +12,24 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "react-native-maps",
+        {
+          "iosPlugin": {
+            "apiKey": "AIzaSyDMPKjcVjdc6jcaO--eyZfjFVTNoyTs2gk"
+          }
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "YOUR_GOOGLE_MAPS_IOS_API_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs your location to show you on the map."
+      }
     },
     "android": {
       "adaptiveIcon": {
